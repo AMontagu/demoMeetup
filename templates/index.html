@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Demo</title>
+</head>
+<body>
+    <button type="button" id="turnOn">Turn On</button>
+    <button type="button" id="turnOff">Turn Off</button>
+
+    {% load static from staticfiles %}
+    <script src="{% static 'js/jquery.min.js' %}"></script>
+    <script src="{% static 'js/cookie.js' %}"></script>
+    <script type="application/javascript">
+        jQuery(function ($) {
+
+            var csrftoken = Cookies.get('csrftoken');
+            console.log(csrftoken);
+
+            $(function () {
+                $.ajaxSettings.traditional = true;
+                $.ajaxSetup({
+                    headers: {"X-CSRFToken": csrftoken}
+                });
+            });
+            function ajaxLauncher(url, data, successCallback) {
+                $.ajax({
+                    type: 'GET',
+                    url: url,
+                    headers: {
+                        Accept: "*/*",
+                    },
+                    success: successCallback,
+                    error: function (err) {
+                        alert(err.responseText);
+                        console.log(err);
+                    }
+                });
+            }
+
+            $("#turnOn").on("click", function () {
+               ajaxLauncher("/turnOn/", function () {
+                   console.log("success");
+               })
+            });
+
+            $("#turnOff").on("click", function () {
+               ajaxLauncher("/turnOff/", function () {
+                   console.log("success");
+               })
+            });
+
+    });
+    </script>
+</body>
+</html>
